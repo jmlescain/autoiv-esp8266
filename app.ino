@@ -8,19 +8,10 @@
 ESP8266WiFiMulti WiFiMulti;
 SocketIoClient webSocket;
 
-//variables
-float drip_rate_sec; //drip_rate_sec will hold the current drip rate per second
-int drip_rate; //drip_rate will hold the current drip rate per minute, mostly what will be used in the app
-String drip_rate_sec_string;
-String drip_rate_string;
-
-//variables for use in the program
 unsigned long pulse_duration; //record the duration of low pulse
-String pulse_duration_string;
+bool isFirstTimeConnect = true;
 
-int i = 0;
-
-//pins
+//PINS
 int IR_in = 5;
 
 void event(const char * payload, size_t length) {
@@ -29,6 +20,9 @@ void event(const char * payload, size_t length) {
 
 void firstConnect(const char * payload, size_t length) {
   Serial.printf("First time connecting...");
+  String macAddress = WiFi.macAddress();
+  String ipAddress = WiFi.localIP().toString;
+  String i = "{\"mac\": \"" + macAddress + "\",\"ip\": \"" + ipAddress + "\"}"; 
 }
 
 char* readRate(){
