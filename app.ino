@@ -18,20 +18,21 @@ void event(const char * payload, size_t length) {
   Serial.printf("got message: %s\n", payload);
 }
 
-void firstConnect(const char * payload, size_t length) {
+void connect(const char * payload, size_t length) {
   Serial.printf("First time connecting...");
   String macAddress = WiFi.macAddress();
   String ipAddress = WiFi.localIP().toString;
-  String i = "{\"mac\": \"" + macAddress + "\",\"ip\": \"" + ipAddress + "\"}"; 
+  String i = "{\"mac\": \"" + macAddress + "\",\"ip\": \"" + ipAddress + "\"}";
+  char identityPayload[100]; 
+  webSocket.emit("identify", i.c_str());
 }
 
-char* readRate(){
+const char* readPulseIn(){
   pulse_duration = pulseIn(IR_in, LOW, 10000000); //measure the duration of the low pulse
   String pulse_duration_string = (String) "\"" + pulse_duration + "\"";
-  char pulse_duration_char[12];
-  pulse_duration_string.c_str();
+  const char* pulse_duration_char;
   Serial.print(pulse_duration_char);
-  return pulse_duration_char;
+  return pulse_duration_string.c_str();
 }
 
 
@@ -57,13 +58,12 @@ void setup() {
     }
 
     webSocket.on("event", event);
-    webSocket.on("first-connect", firstConnect);
+    webSocket.on("connect", connect);
     webSocket.begin("192.168.0.33", 4000);
 }
 
 void loop() {
     webSocket.loop();
-    webSocket.emit("pulseIn", readRate());
-    webSocket.emit("test", "\"testing\"");
+    webSocket.emit("pulseIn", readPulseIn());
 }
 
