@@ -20,11 +20,11 @@ void event(const char * payload, size_t length) {
 
 void connect(const char * payload, size_t length) {
   Serial.printf("First time connecting...");
-  String macAddress = WiFi.macAddress();
-  String ipAddress = WiFi.localIP().toString;
-  String i = "{\"mac\": \"" + macAddress + "\",\"ip\": \"" + ipAddress + "\"}";
-  char identityPayload[100]; 
-  webSocket.emit("identify", i.c_str());
+  // String macAddress = WiFi.macAddress();
+  // String ipAddress = WiFi.localIP().toString();
+  // String i = "{\"mac\": \"" + macAddress + "\",\"ip\": \"" + ipAddress + "\"}";
+  // Serial.println(i);
+  // webSocket.emit("identify", i.c_str());
 }
 
 const char* readPulseIn(){
@@ -52,6 +52,7 @@ void setup() {
       }
 
     WiFiMulti.addAP("SKYbroadbandc4fd", "494102151");
+    WiFiMulti.addAP("Flare S3 Power", "rageagainstthedyingofthelight");
 
     while(WiFiMulti.run() != WL_CONNECTED) {
         delay(100);
@@ -59,7 +60,7 @@ void setup() {
 
     webSocket.on("event", event);
     webSocket.on("connect", connect);
-    webSocket.begin("192.168.0.33", 4000);
+    webSocket.begin("192.168.43.203", 4000);
 }
 
 void loop() {
