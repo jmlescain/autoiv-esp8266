@@ -54,20 +54,20 @@ void setup() {
 
     WiFi.mode(WIFI_STA);
 
-    WiFi.begin("auto-iv", "password");
+    // WiFi.begin("auto-iv", "passwordispassword");
   
-    while (WiFi.status() != WL_CONNECTED) {
-      delay(500);
-      Serial.print(".");
-    }
-
-    // WiFiMulti.addAP("auto-iv", "password");
-    // WiFiMulti.addAP("Flare S3 Power", "rageagainstthedyingofthelight");
-    // WiFiMulti.addAP("SKYbroadbandC4FD", "494102151");
-    
-    // while(WiFiMulti.run() != WL_CONNECTED) {
-    //     delay(100);
+    // while (WiFi.status() != WL_CONNECTED) {
+    //   delay(500);
+    //   Serial.print(".");
     // }
+
+    WiFiMulti.addAP("auto-iv", "password");
+    WiFiMulti.addAP("Flare S3 Power", "rageagainstthedyingofthelight");
+    WiFiMulti.addAP("SKYbroadbandC4FD", "494102151");
+    
+    while(WiFiMulti.run() != WL_CONNECTED) {
+        delay(100);
+    }
 
     webSocket.on("event", event);
     webSocket.on("connect", connect);
