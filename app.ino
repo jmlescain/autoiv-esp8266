@@ -61,9 +61,9 @@ void setup() {
     //   Serial.print(".");
     // }
 
-    WiFiMulti.addAP("auto-iv", "password");
     WiFiMulti.addAP("Flare S3 Power", "rageagainstthedyingofthelight");
     WiFiMulti.addAP("SKYbroadbandC4FD", "494102151");
+    WiFiMulti.addAP("auto-iv", "password");
     
     while(WiFiMulti.run() != WL_CONNECTED) {
         delay(100);
