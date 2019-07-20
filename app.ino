@@ -19,20 +19,21 @@ void event(const char * payload, size_t length) {
 }
 
 void connect(const char * payload, size_t length) {
-  Serial.printf("First time connecting...");
-  // String macAddress = WiFi.macAddress();
-  // String ipAddress = WiFi.localIP().toString();
-  // String i = "{\"mac\": \"" + macAddress + "\",\"ip\": \"" + ipAddress + "\"}";
-  // Serial.println(i);
-  // webSocket.emit("identify", i.c_str());
+  Serial.println("First time connecting...");
+  String macAddress = WiFi.macAddress();
+  String ipAddress = WiFi.localIP().toString();
+  String i = "{\"mac\": \"" + macAddress + "\",\"ip\": \"" + ipAddress + "\"}";
+  const char* identity = i.c_str();
+  Serial.println(identity);
+  webSocket.emit("identify", identity);
 }
 
 const char* readPulseIn(){
   pulse_duration = pulseIn(IR_in, LOW, 10000000); //measure the duration of the low pulse
   String pulse_duration_string = (String) "\"" + pulse_duration + "\"";
-  const char* pulse_duration_char;
-  Serial.print(pulse_duration_char);
-  return pulse_duration_string.c_str();
+  const char * pulse_duration_char = pulse_duration_string.c_str();
+  //Serial.println(pulse_duration_char);
+  webSocket.emit("pulseIn", pulse_duration_char);
 }
 
 
@@ -51,20 +52,33 @@ void setup() {
           delay(1000);
       }
 
-    WiFiMulti.addAP("SKYbroadbandc4fd", "494102151");
-    WiFiMulti.addAP("Flare S3 Power", "rageagainstthedyingofthelight");
+    WiFi.mode(WIFI_STA);
 
-    while(WiFiMulti.run() != WL_CONNECTED) {
-        delay(100);
+    WiFi.begin("auto-iv", "password");
+  
+    while (WiFi.status() != WL_CONNECTED) {
+      delay(500);
+      Serial.print(".");
     }
+
+    // WiFiMulti.addAP("auto-iv", "password");
+    // WiFiMulti.addAP("Flare S3 Power", "rageagainstthedyingofthelight");
+    // WiFiMulti.addAP("SKYbroadbandC4FD", "494102151");
+    
+    // while(WiFiMulti.run() != WL_CONNECTED) {
+    //     delay(100);
+    // }
 
     webSocket.on("event", event);
     webSocket.on("connect", connect);
-    webSocket.begin("192.168.43.203", 4000);
+    webSocket.begin("192.168.0.104", 4000);
+    connect("", 0);
 }
 
 void loop() {
     webSocket.loop();
-    webSocket.emit("pulseIn", readPulseIn());
+    //webSocket.emit("pulseIn", readPulseIn());
+    readPulseIn();
+    webSocket.emit("hello", "\"hello\"");
 }
 
