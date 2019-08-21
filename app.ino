@@ -3,7 +3,7 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266WiFiMulti.h>
 
-#include <HX711.h>
+//#include <HX711.h>
 
 #include <SocketIoClient.h>
 
@@ -15,7 +15,7 @@ unsigned long pulse_duration; //record the duration of low pulse
 bool isFirstTimeConnect = true;
 
 //PINS
-int IR_in = 5;
+int IR_in = 13;
 //const int LOADCELL_DOUT_PIN = 14;
 //const int LOADCELL_SCK_PIN = 12;
 
@@ -51,8 +51,8 @@ const char* readValues(){
 void setup() {
     Serial.begin(115200);
 
-    scale.begin(LOADCELL_DOUT_PIN, LOADCELL_SCK_PIN);
-    scale.set_scale(-1063.64);
+    //scale.begin(LOADCELL_DOUT_PIN, LOADCELL_SCK_PIN);
+    //scale.set_scale(-1063.64);
 
 
     Serial.setDebugOutput(true);
