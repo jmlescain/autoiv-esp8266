@@ -26,6 +26,7 @@ void event(const char * payload, size_t length) {
 }
 
 void connect(const char * payload, size_t length) {
+  delay(3000);
   Serial.println("First time connecting...");
   String macAddress = WiFi.macAddress();
   String ipAddress = WiFi.localIP().toString();
@@ -91,7 +92,6 @@ void setup() {
     webSocket.on("event", event);
     webSocket.on("connect", connect);
     webSocket.begin("autoiv.xyz");
-    connect("", 0);
 }
 
 void loop() {
