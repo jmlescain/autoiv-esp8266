@@ -37,17 +37,11 @@ void connect(const char * payload, size_t length) {
 }
 
 const char* readValues(){
-  //noInterrupts();
   pulse_duration = pulseIn(IR_in, LOW, 5000000); //measure the duration of the low pulse
-  //interrupts();
-  String pulse_duration_string = (String) "\"" + pulse_duration + "\"";
-  const char * pulse_duration_char = pulse_duration_string.c_str();
-  //Serial.println(pulse_duration_char);
-  webSocket.emit("pulseIn", pulse_duration_char);
-  weight_value = scale.get_units(10);
-  String weight_value_string = (String) "\"" + weight_value + "\"";
-  const char * weight_value_char = weight_value_string.c_str();
-  webSocket.emit("weighIn", weight_value_char);
+  weight_value = scale.get_units(10); //measure weight
+  String payload = (String) "{\"pulse\": \"" + pulse_duration + "\",\"weight\": \"" + weight_value + "\"}";
+  const char * payload_char = payload.c_str();
+  webSocket.emit("values", payload_char);
 }
 
 
@@ -74,13 +68,6 @@ void setup() {
 
     WiFi.mode(WIFI_STA);
 
-    // WiFi.begin("auto-iv", "passwordispassword");
-  
-    // while (WiFi.status() != WL_CONNECTED) {
-    //   delay(500);
-    //   Serial.print(".");
-    // }
-
     WiFiMulti.addAP("Flare S3 Power", "rageagainstthedyingofthelight");
     WiFiMulti.addAP("SKYbroadbandC4FD", "494102151");
     WiFiMulti.addAP("auto-iv", "passwordispassword");
@@ -96,8 +83,6 @@ void setup() {
 
 void loop() {
     webSocket.loop();
-    //webSocket.emit("pulseIn", readPulseIn());
     readValues();
-    //webSocket.emit("hello", "\"hello\"");
 }
 
