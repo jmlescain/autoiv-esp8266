@@ -12,7 +12,7 @@ SocketIoClient webSocket;
 
 unsigned long pulse_duration; //record the duration of low pulse
 unsigned long weight_value;
-bool isFirstTimeConnect = true;
+bool isConnected = false;
 
 //PINS
 int IR_in = 5;
@@ -26,7 +26,6 @@ void event(const char * payload, size_t length) {
 }
 
 void connect(const char * payload, size_t length) {
-  delay(3000);
   Serial.println("First time connecting...");
   String macAddress = WiFi.macAddress();
   String ipAddress = WiFi.localIP().toString();
@@ -34,6 +33,12 @@ void connect(const char * payload, size_t length) {
   const char* identity = i.c_str();
   Serial.println(identity);
   webSocket.emit("identify", identity);
+  isConnected = true;
+  
+}
+
+void disconnect(const char * payload, size_t length){
+  isConnected = false;
 }
 
 const char* readValues(){
@@ -51,8 +56,8 @@ void setup() {
     pinMode(IR_in, INPUT);
 
     scale.begin(LOADCELL_DOUT_PIN, LOADCELL_SCK_PIN);
-    scale.set_scale(-1063.64);
-
+    scale.set_scale(-376.91);
+    scale.set_offset(-71870);
 
     Serial.setDebugOutput(true);
 
@@ -78,11 +83,14 @@ void setup() {
 
     webSocket.on("event", event);
     webSocket.on("connect", connect);
+    webSocket.on("disconnect", disconnect);
     webSocket.begin("autoiv.xyz");
 }
 
 void loop() {
     webSocket.loop();
-    readValues();
+    if (isConnected == true) {
+      readValues();
+    }
 }
 
