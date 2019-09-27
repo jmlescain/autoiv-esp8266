@@ -23,6 +23,8 @@ HX711 scale;
 
 void event(const char * payload, size_t length) {
   Serial.printf("got message: %s\n", payload);
+
+
 }
 
 void connect(const char * payload, size_t length) {
@@ -56,8 +58,8 @@ void setup() {
     pinMode(IR_in, INPUT);
 
     scale.begin(LOADCELL_DOUT_PIN, LOADCELL_SCK_PIN);
-    scale.set_scale(-376.91);
-    scale.set_offset(-71870);
+    scale.set_scale(376.91);
+    scale.set_offset(73377);
 
     Serial.setDebugOutput(true);
 
@@ -73,9 +75,9 @@ void setup() {
 
     WiFi.mode(WIFI_STA);
 
-    WiFiMulti.addAP("Flare S3 Power", "rageagainstthedyingofthelight");
-    WiFiMulti.addAP("SKYbroadbandC4FD", "494102151");
+    WiFiMulti.addAP("Scopee Toffee", "toffeescopee");
     WiFiMulti.addAP("auto-iv", "passwordispassword");
+    WiFiMulti.addAP("Flare S3 Power", "rageagainstthedyingofthelight");
     
     while(WiFiMulti.run() != WL_CONNECTED) {
         delay(100);
