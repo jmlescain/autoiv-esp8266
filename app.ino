@@ -11,7 +11,7 @@ ESP8266WiFiMulti WiFiMulti;
 SocketIoClient webSocket;
 
 unsigned long pulse_duration; //record the duration of low pulse
-unsigned long weight_value;
+float weight_value;
 bool isConnected = false;
 
 //PINS
@@ -43,14 +43,16 @@ void disconnect(const char * payload, size_t length){
   isConnected = false;
 }
 
-const char* readValues(){
+const char *readValues()
+{
   pulse_duration = pulseIn(IR_in, LOW, 5000000); //measure the duration of the low pulse
-  weight_value = scale.get_units(10); //measure weight
-  String payload = (String) "{\"pulse\": \"" + pulse_duration + "\",\"weight\": \"" + weight_value + "\"}";
-  const char * payload_char = payload.c_str();
-  webSocket.emit("values", payload_char);
+  if (pulse_duration >= 100000 || pulse_duration == 0) {
+    weight_value = scale.get_units(10);            //measure weight
+    String payload = (String) "{\"pulse\": \"" + pulse_duration + "\",\"weight\": \"" + weight_value + "\"}";
+    const char *payload_char = payload.c_str();
+    webSocket.emit("values", payload_char);
+  }
 }
-
 
 void setup() {
     Serial.begin(115200);
@@ -58,8 +60,8 @@ void setup() {
     pinMode(IR_in, INPUT);
 
     scale.begin(LOADCELL_DOUT_PIN, LOADCELL_SCK_PIN);
-    scale.set_scale(376.91);
-    scale.set_offset(73377);
+    scale.set_scale(324.87);
+    scale.set_offset(211980);
 
     Serial.setDebugOutput(true);
 
