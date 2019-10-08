@@ -48,7 +48,7 @@ void disconnect(const char * payload, size_t length){
 const char *readValues()
 {
   pulse_duration = pulseIn(IR_in, LOW, 7000000); //measure the duration of the low pulse
-  Serial.println(pulse_duration);
+  //Serial.println(pulse_duration);
   if (pulse_duration == 0 && prev_pulse == 0) {
       zero_count++;
       //Serial.println("zero count: " + zero_count);
@@ -74,8 +74,8 @@ void setup() {
     pinMode(IR_in, INPUT);
 
     scale.begin(LOADCELL_DOUT_PIN, LOADCELL_SCK_PIN);
-    scale.set_scale(325.65); //324.87
-    scale.set_offset(-121960); //211980
+    scale.set_scale(377.42); //324.87
+    scale.set_offset(72840); //211980
 
     Serial.setDebugOutput(true);
 
